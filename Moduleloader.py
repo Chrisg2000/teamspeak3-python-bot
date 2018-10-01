@@ -1,8 +1,7 @@
-import configparser
 import importlib
 import logging
 import sys
-import modules
+
 setups = []
 exits = []
 plugin_modules = {}
@@ -76,18 +75,25 @@ def event(*event_types):
     return register_observer
 
 
-def command(*command_list):
+def command(*command_list, desc=None):
     """
     Decorator to register a function as a handler for text commands.
+    Supports describing the function
     :param command_list: Commands to handle.
     :type command_list: list[str]
+    :param desc: Description of function
+    :type desc: str
     :return:
     """
-    def register_command(function):
+    def save_description(func):
+        func.description = desc
+        return register_command(func)
+
+    def register_command(func):
         for text_command in command_list:
-            command_handler.add_handler(function, text_command)
-        return function
-    return register_command
+            command_handler.add_handler(func, text_command)
+        return func
+    return save_description if desc else register_command
 
 
 def group(*groups):

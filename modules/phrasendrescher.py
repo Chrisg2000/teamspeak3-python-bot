@@ -34,7 +34,7 @@ def setup_quoter(ts3bot, db):
     conn.close()
 
 
-@Moduleloader.command('quote',)
+@Moduleloader.command('quote', desc='Adds a qoute to the list')
 def add_quote(sender, msg):
     if len(msg) <= len('!quote '):
         Bot.send_msg_to_client(bot.ts3conn, sender, 'Please include a quote to save.')

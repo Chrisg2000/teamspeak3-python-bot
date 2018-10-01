@@ -23,9 +23,12 @@ class CommandHandler:
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)
         self.logger.propagate = 0
-        self.handlers = {}
+        self.handlers = {'help': [self._command_help]}
         # Default groups if group not specified.
         self.accept_from_groups = ['Server Admin', 'Moderator']
+        # Default command 'help'
+        CommandHandler._command_help.description = 'Shows this help page'
+        CommandHandler._command_help.allowed_groups = ('.*', )
 
     def add_handler(self, handler, command):
         """
@@ -87,8 +90,39 @@ class CommandHandler:
         :param event:  New event.
         """
         if type(event) is Events.TextMessageEvent:
-            if event.targetmode == "Private":
-                if event.invoker_id != int(self.ts3conn.whoami()["client_id"]):  # Don't talk to yourself ...
-                    ci = ClientInfo.ClientInfo(event.invoker_id, self.ts3conn)
-                    self.logger.info("Message: " + event.message + " from: " + ci.name)
-                    self.handle_command(event.message, sender=event.invoker_id)
+            if event.invoker_id != int(self.ts3conn.whoami()["client_id"]):  # Don't talk to yourself ...
+                ci = ClientInfo.ClientInfo(event.invoker_id, self.ts3conn)
+                self.logger.info("Message: " + event.message + " from: " + ci.name)
+                self.handle_command(event.message, sender=event.invoker_id)
+
+    def _command_help(self, sender=None, msg=None):
+        """
+        Function for sending the sender all available commands.
+        This is the handler for the 'help' command
+        :param sender: clientId of command sender
+        :param msg: message the sender used
+        """
+        descriptions = {}
+        servergroups = {}
+        for command in self.handlers:
+            for handler in self.handlers[command]:
+                if command in descriptions and hasattr(handler, 'description'):
+                    descriptions[command].append(handler.description)
+                elif hasattr(handler, 'description'):
+                    descriptions[command] = [handler.description]
+                else:
+                    descriptions.setdefault(command, []).append('No description for this command')
+
+                if command in servergroups and hasattr(handler, 'allowed_groups'):
+                    servergroups[command].append(list(handler.allowed_groups))
+                elif hasattr(handler, 'allowed_groups'):
+                    servergroups[command] = [list(handler.allowed_groups)]
+                else:
+                    servergroups.setdefault(command, []).append(self.accept_from_groups)
+        message = ['All Bot commands:']
+        command_len = len(max(self.handlers.keys(), key=len))
+        for command, description, group in zip(self.handlers, descriptions.values(), servergroups.values()):
+            for desc, grp in zip(description, group):
+                message.append('!{0:<{cmd_len}}:  {1} [{2:>}]'.format(command, desc, ', '.join(grp), cmd_len=command_len))
+        for msg in message:
+            Bot.send_msg_to_client(self.ts3conn, sender, msg)

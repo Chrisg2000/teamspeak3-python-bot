@@ -14,32 +14,32 @@ def setup(ts3bot):
     bot = ts3bot
 
 
-@command('hello',)
+@command('hello', desc='Hello for Server-Admins')
 @group('Server Admin',)
 def hello(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "Hello Admin!")
 
 
-@command('hello',)
+@command('hello', desc='Hello for Moderator')
 @group('Moderator',)
 def hello(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "Hello Moderator!")
 
 
-@command('hello',)
+@command('hello', desc='Hello for all normals out there')
 @group('Normal',)
 def hello(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "Hello Casual!")
 
 
-@command('kickme', 'fuckme')
+@command('kickme', 'fuckme', desc='Kicks the sender from the Server')
 @group('.*',)
 def kickme(sender, msg):
     ts3conn = bot.ts3conn
     ts3conn.clientkick(sender, 5, "Whatever.")
 
 
-@command('mtest',)
+@command('mtest', desc="I don't know what this thing is doing")
 def mtest(sender, msg):
     print("MTES")
     channels = msg[len("!mtest "):].split()
@@ -48,8 +48,7 @@ def mtest(sender, msg):
     print(ts3conn.channelfind(channels[0]))
  
 
-
-@command('multimove', 'mm')
+@command('multimove', 'mm', desc='Move all clients from one channel to another.')
 @group('Server Admin', 'Moderator')
 def multi_move(sender, msg):
     """
@@ -120,19 +119,19 @@ def multi_move(sender, msg):
                     str(e.id) + e.message)
 
 
-@command('version',)
+@command('version', desc='Shows the version of the bot')
 @group('.*')
 def send_version(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, __version__)
 
 
-@command('whoami',)
+@command('whoami', desc='Who are you?')
 @group('.*')
 def whoami(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "None of your business!")
 
 
-@command('stop',)
+@command('stop', desc='Stops the Bot')
 @group('Server Admin',)
 def stop_bot(sender, msg):
     Moduleloader.exit_all()
@@ -140,7 +139,7 @@ def stop_bot(sender, msg):
     logger.warning("Bot was quit!")
 
 
-@command('restart',)
+@command('restart', desc='Restarts the Bot')
 @group('Server Admin', 'Moderator',)
 def restart_bot(sender, msg):
     Moduleloader.exit_all()
