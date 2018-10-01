@@ -63,7 +63,7 @@ def inform(evt):
         Bot.send_msg_to_client(bot.ts3conn, evt.client_id, quote)
 
 
-@Moduleloader.command('addquote', desc='Add a quote')
+@Moduleloader.command('addquote', desc='Add a new quote')
 def add_quote(sender, msg):
     """
     Add a quote.

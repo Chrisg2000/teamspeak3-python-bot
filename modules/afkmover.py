@@ -13,7 +13,7 @@ autoStart = True
 channel_name = "AFK"
 
 
-@command('startafk', 'afkstart', 'afkmove', desc='Starts the AfkMover')
+@command('startafk', 'afkstart', 'afkmove', desc='Start the Afk Mover')
 def start_afkmover(sender=None, msg=None):
     """
     Start the AfkMover by clearing the afkStopper signal and starting the mover.
@@ -25,7 +25,7 @@ def start_afkmover(sender=None, msg=None):
         afkMover.start()
 
 
-@command('stopafk', 'afkstop', desc='Stops the AfkMover')
+@command('stopafk', 'afkstop', desc='Stop the AFK Mover')
 def stop_afkmover(sender=None, msg=None):
     """
     Stop the AfkMover by setting the afkStopper signal and undefining the mover.

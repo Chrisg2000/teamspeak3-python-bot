@@ -14,19 +14,19 @@ def setup(ts3bot):
     bot = ts3bot
 
 
-@command('hello', desc='Hello for Server-Admins')
+@command('hello', desc='Answers with a message depending on the server group')
 @group('Server Admin',)
 def hello(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "Hello Admin!")
 
 
-@command('hello', desc='Hello for Moderator')
+@command('hello', desc='Answers with a message depending on the server group')
 @group('Moderator',)
 def hello(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "Hello Moderator!")
 
 
-@command('hello', desc='Hello for all normals out there')
+@command('hello', desc='Answers with a message depending on the server group')
 @group('Normal',)
 def hello(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "Hello Casual!")
@@ -48,7 +48,9 @@ def mtest(sender, msg):
     print(ts3conn.channelfind(channels[0]))
  
 
-@command('multimove', 'mm', desc='Move all clients from one channel to another.')
+@command('multimove', 'mm',
+         desc='Move all users from channel 1 to channel 2 (should work for channels containing spaces, most of the '
+              'time)')
 @group('Server Admin', 'Moderator')
 def multi_move(sender, msg):
     """
@@ -71,7 +73,7 @@ def multi_move(sender, msg):
         for channel_name in channel_name_list:
             if msg[len("!multimove "):].startswith(channel_name):
                 source_name = channel_name
-                dest_name = msg[len("!multimove ") + len(source_name)+1:]
+                dest_name = msg[len("!multimove ") + len(source_name) + 1:]
     else:
         source_name = channels[0]
         dest_name = channels[1]
@@ -119,28 +121,28 @@ def multi_move(sender, msg):
                     str(e.id) + e.message)
 
 
-@command('version', desc='Shows the version of the bot')
+@command('version', desc='Answer with the current module version')
 @group('.*')
 def send_version(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, __version__)
 
 
-@command('whoami', desc='Who are you?')
+@command('whoami', desc='Fun command.')
 @group('.*')
 def whoami(sender, msg):
     Bot.send_msg_to_client(bot.ts3conn, sender, "None of your business!")
 
 
-@command('stop', desc='Stops the Bot')
-@group('Server Admin',)
+@command('stop', desc='Stop the bot')
+@group('Server Admin', )
 def stop_bot(sender, msg):
     Moduleloader.exit_all()
     bot.ts3conn.quit()
     logger.warning("Bot was quit!")
 
 
-@command('restart', desc='Restarts the Bot')
-@group('Server Admin', 'Moderator',)
+@command('restart', desc='Restart the bot')
+@group('Server Admin', 'Moderator', )
 def restart_bot(sender, msg):
     Moduleloader.exit_all()
     bot.ts3conn.quit()
