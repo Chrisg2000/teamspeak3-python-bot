@@ -1,0 +1,3 @@
+[submodule "ts3"]
+	path = ts3
+	url = https://github.com/Chrisg2000/teamspeak3-python-api.git
